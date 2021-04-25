@@ -1,0 +1,76 @@
+{% extends 'bootstrap4/bootstrap4.html' %}
+
+{% load bootstrap4 %}
+{% load static %}
+
+{% block bootstrap4_title %}{% block title %}Democrasite{% endblock %}{% endblock %}
+
+{% block bootstrap4_extra_head %}
+  <link rel="stylesheet" href="{% static 'elections/css/styles.css' %}">
+  {% block style %}{% endblock %}
+{% endblock %}
+
+
+{% block bootstrap4_content %}
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+      <div class="d-flex flex-grow-1">
+        <span class="w-100 d-lg-none d-block"><!-- hidden spacer to center brand on mobile --></span>
+        <div class="w-100 text-right">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+      </div>
+      <div class="collapse navbar-collapse flex-grow-1 text-right" id="navbar">
+        <ul class="navbar-nav ml-auto flex-nowrap">
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a href="{% url 'elections:my-bills' %}" class="nav-link">Proposals</a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'elections:my-bill-votes' %}" class="nav-link">Votes cast</a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'logout' %}?next={{ request.path }}" class="nav-link">Logout</a>
+            </li>
+          {% else %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Login
+            </a>
+            <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item px-3" href="{% url 'social:begin' 'github' %}?next={{ request.path }}">Github</a>
+              <a class="dropdown-item px-3" href="{% url 'social:begin' 'github' %}?next={{ request.path }}">Google</a>
+            </div>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <div class="container-fluid">
+    {% block content %}{% endblock %}
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="text-center">
+        {% if request.resolver_match.url_name == 'index' %}
+          <a href="{% url 'elections:about' %}">About</a>
+          |
+          <a href="https://github.com" target="_blank">Github</a>
+        {% else %}
+          <a href="{% url 'elections:index' %}">Home</a>
+        {% endif %}
+      </div>
+    </div>
+  </footer>
+{% endblock %}
+
+
+{% block bootstrap4_extra_script %}
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+  {% block javascript %}{% endblock %}
+{% endblock %}

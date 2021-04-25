@@ -1,0 +1,75 @@
+{% extends 'elections/base.html' %}
+
+{% block content %}
+  {% for bill in bill_list %}
+    {% if forloop.counter0|divisibleby:4 %}
+      <div class="row">
+    {% endif %}
+      <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+        <div class="card text-center mb-4{% if bill.constitutional %} bg-light{% endif %}">
+          <div class="card-body">
+            <a class="card-link" href="{% url 'elections:bill-detail' bill.id %}">
+              <h5 class="card-title">
+                  {{ bill }}
+              </h5>
+              {% if bill.constitutional %}
+                <p class="text-info">Amendment to the Constitution</p>
+              {% endif %}
+            </a>
+            <hr>
+            <div class="card-text">
+              {{ bill.description }}
+            </div>
+            <div class="card-text text-right">
+              <a class="card-link git-pull-link" href="https://github.com/{{ github_repo }}/pull/{{ bill.pr_num }}" target="_blank">
+                <span class="text-success">+{{ bill.additions }}</span>
+                <span class="text-danger">-{{ bill.deletions }}</span>
+              </a>
+            </div>
+            <div class="progress">
+              <div class="progress-bar bg-success" role="progressbar"></div>
+              <div class="progress-bar bg-danger" role="progressbar"></div>
+            </div>
+            <a href="javascript:;" class="float-left text-success mt-2 vote{% if user.is_authenticated and user in bill.yes_votes.all %} font-weight-bold{% endif %}"
+              {% if user.is_authenticated %}
+                id="vote-yes-{{ bill.id }}"
+                action="{% url 'elections:bill-vote' bill.id %}"
+                value="vote-yes"
+              {% else %}
+                data-toggle="tooltip" data-placement="bottom"
+                title="Login to vote" data-trigger="click"
+              {% endif %}
+              >
+              &check; Yes: <span class="num-yes-votes" id="num-yes-votes-{{ bill.id }}">{{ bill.yes_votes.count }}</span>
+            </a>
+            <a href="javascript:;" class="float-right text-danger mt-2 vote{% if user.is_authenticated and user in bill.no_votes.all %} font-weight-bold{% endif %}"
+            {% if user.is_authenticated %}
+              id="vote-no-{{ bill.id }}"
+              action="{% url 'elections:bill-vote' bill.id %}"
+              value="vote-no"
+            {% else %}
+              data-toggle="tooltip" data-placement="bottom"
+              title="Login to vote" data-trigger="click"
+            {% endif %}
+            >
+              X No: <span class="num-no-votes" id="num-no-votes-{{ bill.id }}">{{ bill.no_votes.count }}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    {% if forloop.counter|divisibleby:4 or forloop.last %}
+      </div>
+    {% endif %}
+  {% empty %}
+    <p>No bills up for vote right now.</p>
+  {% endfor %}
+{% endblock %}
+
+{% load static %}
+
+{% block javascript %}
+  <script type="text/javascript" src="{% static 'elections/js/bill.js' %}"></script>
+  {% if user.is_authenticated %}
+    <script type="text/javascript" src="{% static 'elections/js/vote.js' %}"></script>
+  {% endif %}
+{% endblock %}
