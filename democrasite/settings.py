@@ -17,7 +17,10 @@ import environ
 
 root = environ.Path(__file__) - 2
 env = environ.Env()
-environ.Env.read_env(root.file('.env'))
+try:
+    environ.Env.read_env(root.file('.env'))
+except FileNotFoundError:
+    print("No .env file found. For development, it is recommended you create one.")
 
 SITE_ROOT = root()
 
