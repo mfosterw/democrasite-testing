@@ -188,7 +188,7 @@ BOOTSTRAP4 = {'include_jquery': True}
 # Celery
 # https://docs.celeryproject.org/en/stable/django/
 
-CELERY_BROKER_URL = env.str('CELERY_BROKER_URL', default='redis://localhost:6379')
+CELERY_BROKER_URL = env.str('REDIS_URL', default='redis://localhost:6379')
 
 CELERY_RESULT_BACKEND = env.str('CELERY_RESULT_BACKEND', default=CELERY_BROKER_URL)
 
