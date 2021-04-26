@@ -37,14 +37,14 @@ def process_pull(action, pr):
             author=author,
             additions=pr['additions'],
             deletions=pr['deletions'],
-            sha=pr['merge_commit_sha'],
+            sha=pr['head']['sha'],
             active=True,
-            constitutional=constitutional,
+            constitutional=bool(constitutional),
         )
         bill.save()
 
         voting_ends = (timezone.now() +
-            timedelta(minutes=settings.ELECTIONS_VOTING_PERIOD))
+            timedelta(days=settings.ELECTIONS_VOTING_PERIOD))
         # Pass id rather than bill object to avoid potential issues with
         # database refresh
         submit_bill.apply_async((bill.id,), eta=voting_ends)
@@ -55,9 +55,9 @@ def process_pull(action, pr):
     if action == 'closed':
         try:
             bill = Bill.objects.filter(pr_num=pr['number'])\
-                .get(pr_num=pr['number'])
+                .get(active=True)
         except Bill.DoesNotExist:
-            logger.info(f'PR {pr["number"]}: No modification (bill does not exist)')
+            logger.info(f'PR {pr["number"]}: No modification (no active bill)')
             return
         bill.active = False
         bill.save()

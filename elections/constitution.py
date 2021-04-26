@@ -2,6 +2,8 @@ import json
 
 from unidiff import PatchSet
 
+from django.conf import settings
+
 # Each filename corresponds to a list of pairs representing protected line
 # ranges within that file, or None to protect the entire file
 
@@ -25,19 +27,20 @@ def _check_hunks(hunks, locks):
         for lock in locks:
             # If any of the diff is within or contains the protected range
             # return True
-            start_prot = lock[0] < start < lock[1]
-            end_prot = lock[0] < end < lock[1]
-            full_prot = start < lock[0] and lock[1] < end
+            start_prot = lock[0] <= start <= lock[1]
+            end_prot = lock[0] <= end <= lock[1]
+            full_prot = start <= lock[0] and lock[1] <= end
             return any((start_prot, end_prot, full_prot))
 
 
 def is_constitutional(diff_str):
-    with open('constitution.json') as f: constitution = json.load(f)
+    with open(settings.SITE_ROOT + '/elections/constitution.json') as f:
+        constitution = json.load(f)
     patch = PatchSet(diff_str)
     matched_files = []
 
     for file in patch:
-        if file in constitution:
+        if file.path in constitution:
             # File removed or renamed
             if file.is_removed_file or (file.source_file.split('/')[-1] !=
                 file.target_file.split('/')[-1]):
@@ -54,12 +57,13 @@ def is_constitutional(diff_str):
 
 
 def update_constitution(diff_str):
-    with open('constitution.json') as f: constitution = json.load(f)
+    with open(settings.SITE_ROOT + '/elections/constitution.json') as f:
+        constitution = json.load(f)
     patch = PatchSet(diff_str)
     update = False
 
     for file in patch:
-        if file in constitution:
+        if file.path in constitution:
             locks = constitution[file.path]
             if locks is None:
                 pass

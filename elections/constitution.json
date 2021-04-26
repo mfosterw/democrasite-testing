@@ -2,11 +2,11 @@
   "elections/constitution.json": null,
   "elections/constitution.py": null,
   "elections/templates/base.html": null,
-  "elections/models.py": [[6, 23]],
-  "elections/tasks.py": [[21, 104]],
-  "elections/urls.py": [[16, 18]],
-  "elections/views.py": [[14, 36]],
-  "elections/webhook.py": [[14, 52]],
+  "elections/models.py": [[7, 25]],
+  "elections/tasks.py": [[18, 120]],
+  "elections/urls.py": [[16, 16], [18, 20]],
+  "elections/views.py": [[15, 74]],
+  "elections/webhooks.py": [[14, 49]],
   "democrasite/settings.py": [[16, 215]],
   "democrasite/urls.py": [[21, 24]]
 }

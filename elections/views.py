@@ -12,6 +12,8 @@ class AboutView(generic.TemplateView):
     template_name = 'elections/about.html'
 
 
+# Bill-related views
+
 class BillListView(generic.ListView):
     model = Bill
     queryset = Bill.objects.filter(active=True)
