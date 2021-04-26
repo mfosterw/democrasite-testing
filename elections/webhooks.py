@@ -41,9 +41,6 @@ def github_hook(request):
             .get(social_auth__uid=userinfo['id'])
         return HttpResponse(f'{user.username} (id={user.id}, ' +
             f'id={userinfo["id"]}) is my favorite user')
-    elif event == 'push':
-        # Deploy some code for example
-        return HttpResponse('success')
     elif event == 'pull_request':
         process_pull.delay(payload['action'], payload['pull_request'])
         return HttpResponse('success')
