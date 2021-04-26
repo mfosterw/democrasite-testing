@@ -51,11 +51,12 @@ INSTALLED_APPS = [
     'bootstrap4',
 ]
 # Admin disabled in production
-if DEBUG: INSTALLED_APPS.append('django.contrib.admin')
+if DEBUG:
+    INSTALLED_APPS.append('django.contrib.admin')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # Static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -91,7 +92,7 @@ WSGI_APPLICATION = 'democrasite.wsgi.application'
 
 DATABASES = {
     'default': env.db('DATABASE_URL',
-        default = 'sqlite:///' + root.path('db.sqlite3')())
+                      default='sqlite:///' + root.path('db.sqlite3')())
 }
 
 
@@ -145,11 +146,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # https://python-social-auth.readthedocs.io/en/stable/index.html
 
 AUTHENTICATION_BACKENDS = [
-    'social_core.backends.github.GithubOAuth2', # Github authentication
-    'social_core.backends.google.GoogleOAuth2', # Google authentication
+    'social_core.backends.github.GithubOAuth2',  # Github authentication
+    'social_core.backends.google.GoogleOAuth2',  # Google authentication
 ]
 # Only social authentication in production
-if DEBUG: AUTHENTICATION_BACKENDS.append('django.contrib.auth.backends.ModelBackend')
+if DEBUG:
+    AUTHENTICATION_BACKENDS.append('django.contrib.auth.backends.ModelBackend')
 
 SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_details',
@@ -190,15 +192,17 @@ BOOTSTRAP4 = {'include_jquery': True}
 
 CELERY_BROKER_URL = env.str('REDIS_URL', default='redis://localhost:6379')
 
-CELERY_RESULT_BACKEND = env.str('CELERY_RESULT_BACKEND', default=CELERY_BROKER_URL)
+CELERY_RESULT_BACKEND = env.str(
+    'CELERY_RESULT_BACKEND', default=CELERY_BROKER_URL)
 
 # Allow tasks to remain in queue long enough for bills to finish voting period
 
-CELERY_VISIBILITY_TIMEOUT = 60 * 60 * 24 * (2 + 1) # voting + 1 days in seconds
+CELERY_VISIBILITY_TIMEOUT = 60 * 60 * 24 * \
+    (2 + 1)  # voting + 1 days in seconds
 
 # Raise error on tasks taking too long
 
-CELERY_TASK_SOFT_TIME_LIMIT = 60 * 5 # 5 minutes
+CELERY_TASK_SOFT_TIME_LIMIT = 60 * 5  # 5 minutes
 
 
 # Elections settings
@@ -217,7 +221,7 @@ ELECTIONS_REPO = 'mfosterw/democrasite-testing'
 
 # Minimum total votes for a bill to pass
 
-ELECTIONS_MINIMUM_QUORUM = 10
+ELECTIONS_MINIMUM_QUORUM = 5
 
 # Proportion of yes votes for a normal bill to pass
 
@@ -229,4 +233,4 @@ ELECTIONS_SUPERMAJORITY = 2/3
 
 # Length, in days, that bills are up for vote
 
-ELECTIONS_VOTING_PERIOD = 2
+ELECTIONS_VOTING_PERIOD = 1
