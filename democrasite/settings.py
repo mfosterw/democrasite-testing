@@ -18,7 +18,7 @@ env = environ.Env()
 try:
     environ.Env.read_env(root.file('.env'))
 except FileNotFoundError:
-    print("No .env file found. For development, it is recommended you create one.")
+    print("No .env file found. Recommended to create one for development.")
 
 SITE_ROOT = root()
 
