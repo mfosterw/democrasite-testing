@@ -213,7 +213,7 @@ ELECTIONS_REPO = 'mfosterw/democrasite-testing'
 
 # Minimum total votes for a bill to pass
 
-ELECTIONS_MINIMUM_QUORUM = 10
+ELECTIONS_MINIMUM_QUORUM = 10 if not DEBUG else 0 # No vote minimum for testing
 
 # Proportion of yes votes for a normal bill to pass
 
