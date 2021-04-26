@@ -1,2 +1,2 @@
 web: gunicorn democrasite.wsgi
-worker: celery --app=tasks.app worker --loglevel=INFO
+celery --app=democrasite.celery_app worker --loglevel=INFO
