@@ -41,7 +41,7 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="navbarDropdown">
               <a class="dropdown-item px-3" href="{% url 'social:begin' 'github' %}?next={{ request.path }}">Github</a>
-              <a class="dropdown-item px-3" href="{% url 'social:begin' 'github' %}?next={{ request.path }}">Google</a>
+              <a class="dropdown-item px-3" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Google</a>
             </div>
           </li>
           {% endif %}
