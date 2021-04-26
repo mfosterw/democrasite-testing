@@ -7,14 +7,14 @@ from django.conf import settings
 from .models import Bill
 
 # Create your views here.
+
+class AboutView(generic.TemplateView):
+    template_name = 'elections/about.html'
+
+
 class BillListView(generic.ListView):
     model = Bill
     queryset = Bill.objects.filter(active=True)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['github_repo'] = settings.ELECTIONS_REPO
-        return context
 
 class BillProposalsView(generic.ListView):
     model = Bill
@@ -72,5 +72,5 @@ def vote(request, pk):
     return HttpResponseForbidden()
 
 
-class AboutView(generic.TemplateView):
-    template_name = 'elections/about.html'
+def context_repo(request):
+    return {'github_repo': settings.ELECTIONS_REPO}
