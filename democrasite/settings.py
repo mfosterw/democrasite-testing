@@ -140,12 +140,7 @@ STATIC_ROOT = root.path('staticfiles')()
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# User authentication settings
-# https://docs.djangoproject.com/en/3.2/topics/auth/default/
-
-LOGOUT_REDIRECT_URL = 'elections:index'
-
-# Django ocial auth
+# Django social auth
 # https://python-social-auth.readthedocs.io/en/stable/index.html
 
 AUTHENTICATION_BACKENDS = [
@@ -217,7 +212,7 @@ ELECTIONS_GITHUB_TOKEN = env.str('GITHUB_TOKEN', default='')
 
 # Github repo on which this app operates
 
-ELECTIONS_REPO = 'mfosterw/digital-registrar-django'
+ELECTIONS_REPO = 'mfosterw/democrasite-testing'
 
 # Minimum total votes for a bill to pass
 

@@ -60,7 +60,7 @@
         {% if request.resolver_match.url_name == 'index' %}
           <a href="{% url 'elections:about' %}">About</a>
           |
-          <a href="https://github.com" target="_blank">Github</a>
+          <a href="https://github.com/mfosterw/democrasite-testing" target="_blank">Github</a>
         {% else %}
           <a href="{% url 'elections:index' %}">Home</a>
         {% endif %}
