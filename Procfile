@@ -1,2 +1,3 @@
 web: gunicorn democrasite.wsgi
-celery --app=democrasite.celery_app worker --loglevel=INFO
+worker: celery --app=democrasite.celery_app worker --loglevel=INFO
+release: python manage.py migrate
