@@ -25,6 +25,8 @@ except FileNotFoundError:
 SITE_ROOT = root()
 
 
+#add a comment here because why not?
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
