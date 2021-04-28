@@ -20,7 +20,7 @@
           </a>
         {% endif %}
         <br>
-        <a class="git-pull-link" href="https://github.com/{{ github_repo }}/pull/{{ bill.pr_num }}" target="_blank">
+        <a class="git-pull-link" href="https://github.com/{{ github_repo }}/pull/{{ bill.pr_num }}/files" target="_blank">
           Diff:
           <span class="text-success">+{{ bill.additions }}</span>
           <span class="text-danger">-{{ bill.deletions }}</span>

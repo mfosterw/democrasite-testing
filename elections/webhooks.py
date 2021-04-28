@@ -39,14 +39,11 @@ def github_hook(request):
         userinfo = json.loads(request.POST['payload'])['sender']
         user = User.objects.filter(social_auth__provider='github')\
             .get(social_auth__uid=userinfo['id'])
-        return HttpResponse(f'{user.username} (id={user.id}, ' +
-            f'id={userinfo["id"]}) is my favorite user')
-    elif event == 'push':
-        # Deploy some code for example
-        return HttpResponse('success')
+        return HttpResponse(f'{user.username} (democrasite id={user.id}, ' +
+            f'github id={userinfo["id"]}) is my favorite user')
     elif event == 'pull_request':
         process_pull.delay(payload['action'], payload['pull_request'])
-        return HttpResponse('success')
+        return HttpResponse('pull request acknowledged')
 
     # In case we receive an event that's not ping or push
     return HttpResponse(status=204)

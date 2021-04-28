@@ -20,5 +20,5 @@ urlpatterns = [
     path('bill/<int:pk>/vote', views.vote, name='bill-vote'),
     path('proposals/', views.BillProposalsView.as_view(), name='my-bills'),
     path('votes/', views.BillVotesView.as_view(), name='my-bill-votes'),
-    path('webhook/github/', github_hook),
+    path('hooks/github/', github_hook),
 ]

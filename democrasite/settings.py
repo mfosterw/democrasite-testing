@@ -13,20 +13,16 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import environ
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-
 root = environ.Path(__file__) - 2
 env = environ.Env()
 try:
     environ.Env.read_env(root.file('.env'))
 except FileNotFoundError:
-    print("No .env file found. For development, it is recommended you create one.")
+    print("No .env file found. Recommended to create one for development.")
 
 SITE_ROOT = root()
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str('SECRET_KEY')
@@ -217,7 +213,7 @@ ELECTIONS_REPO = 'mfosterw/democrasite-testing'
 
 # Minimum total votes for a bill to pass
 
-ELECTIONS_MINIMUM_QUORUM = 10
+ELECTIONS_MINIMUM_QUORUM = 10 if not DEBUG else 0 # No vote minimum for testing
 
 # Proportion of yes votes for a normal bill to pass
 
