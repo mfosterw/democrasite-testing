@@ -14,16 +14,7 @@
 
 {% block bootstrap4_content %}
   <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white">
-      <div class="d-flex flex-grow-1">
-        <span class="w-100 d-lg-none d-block"><!-- hidden spacer to center brand on mobile --></span>
-        <div class="w-100 text-right">
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-        </div>
-      </div>
-      <div class="collapse navbar-collapse flex-grow-1 text-right" id="navbar">
+    <nav class="navbar navbar-expand-md navbar-light text-right" id="navbar">
         <ul class="navbar-nav ml-auto flex-nowrap">
           {% if user.is_authenticated %}
             <li class="nav-item">
@@ -47,15 +38,14 @@
           </li>
           {% endif %}
         </ul>
-      </div>
     </nav>
   </header>
 
-  <div class="container-fluid">
+  <main class="container-fluid">
     {% block content %}{% endblock %}
-  </div>
+  </main>
 
-  <footer class="footer">
+  <footer class="footer fixed-bottom">
     <div class="container">
       <div class="text-center">
         {% if request.resolver_match.url_name == 'index' %}
