@@ -58,17 +58,9 @@ def vote(request, pk):
         return HttpResponseBadRequest()
 
     if vote == 'vote-yes':
-        if bill in request.user.yes_votes.all():
-            bill.yes_votes.remove(request.user)
-        else:
-            bill.no_votes.remove(request.user)
-            bill.yes_votes.add(request.user)
+        bill.vote(True, request.user)
     elif vote == 'vote-no':
-        if bill in request.user.no_votes.all():
-            bill.no_votes.remove(request.user)
-        else:
-            bill.yes_votes.remove(request.user)
-            bill.no_votes.add(request.user)
+        bill.vote(False, request.user)
     else:
         return HttpResponseBadRequest()
 

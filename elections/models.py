@@ -28,5 +28,25 @@ class Bill(models.Model):
         return f'{self.name} (PR #{self.pr_num})'
 
     def get_absolute_url(self):
-        '''Returns URL to view this Course instance'''
+        '''Returns URL to view this Bill instance'''
         return reverse('elections:bill-detail', args=(self.id,))
+
+    def vote(self, support, user):
+        '''Sets the given user's vote based on the support parameter
+
+        If the user already voted the way the method would set, their vote is
+        removed from the bill (i.e. if user is in bill.yes_votes and support is
+        True, user is removed from bill.yes_votes)
+        '''
+        if support:
+            self.no_votes.remove(user)
+            if self in user.yes_votes.all():
+                self.yes_votes.remove(user)
+            else:
+                self.yes_votes.add(user)
+        else:
+            self.yes_votes.remove(user)
+            if self in user.no_votes.all():
+                self.no_votes.remove(user)
+            else:
+                self.no_votes.add(user)
