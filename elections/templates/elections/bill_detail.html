@@ -3,62 +3,71 @@
 {% block title %}{{ bill.name }} - {{ block.super }}{% endblock %}
 
 {% block content %}
-  <div class="row">
-    <div class="col-8">
-      <h2>{{ bill }}</h2>
-      {% if bill.constitutional %}
-        <p class="text-info">Amendment to the Constitution</p>
-      {% endif %}
-      <p>
-        {{ bill.description }}
-        {% if bill.author == user %}
-          <a href="{% url 'elections:bill-edit' bill.id %}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-              <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-            </svg>
-          </a>
+  <div class="container {% if not bill.active %} inactive{% endif %}">
+    <div class="row">
+      <div class="col">
+        <h2>{{ bill }}</h2>
+        {% if bill.constitutional %}
+          <p class="text-info">Amendment to the Constitution</p>
         {% endif %}
-        <br>
-        <a class="git-pull-link" href="https://github.com/{{ github_repo }}/pull/{{ bill.pr_num }}/files" target="_blank">
-          Diff:
-          <span class="text-success">+{{ bill.additions }}</span>
-          <span class="text-danger">-{{ bill.deletions }}</span>
-        </a>
-      </p>
+        {% if not bill.active %}
+          <p class="text-danger">Expired</p>
+        {% endif %}
+        <p>
+          {{ bill.description }}
+          {% if bill.author == user %}
+            <a href="{% url 'elections:bill-edit' bill.id %}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+              </svg>
+            </a>
+          {% endif %}
+          <br>
+          <a class="git-pull-link" href="https://github.com/{{ github_repo }}/pull/{{ bill.pr_num }}/files" target="_blank">
+            Diff:
+            <span class="text-success">+{{ bill.additions }}</span>
+            <span class="text-danger">-{{ bill.deletions }}</span>
+          </a>
+        </p>
+      </div>
     </div>
 
-  </div>
-  <div class="row">
-    <div class="col-3">
-      <div class="progress">
-        <div class="progress-bar bg-success" role="progressbar"></div>
-        <div class="progress-bar bg-danger" role="progressbar"></div>
-      </div>
-      <a href="javascript:;" class="float-left text-success mt-2 vote{% if user.is_authenticated and user in bill.yes_votes.all %} font-weight-bold{% endif %}"
-        {% if user.is_authenticated %}
-          id="vote-yes-{{ bill.id }}"
-          action="{% url 'elections:bill-vote' bill.id %}"
-          value="vote-yes"
-        {% else %}
-          data-toggle="tooltip" data-placement="bottom"
-          title="Login to vote" data-trigger="click"
+    <div class="row">
+      <div class="col-3">
+        <div class="progress">
+          <div class="progress-bar bg-success" role="progressbar"></div>
+          <div class="progress-bar bg-danger" role="progressbar"></div>
+        </div>
+        <a href="javascript:;" class="float-left text-success mt-2 vote{% if user in bill.yes_votes.all %} font-weight-bold{% endif %}"
+          {% if bill.active %}
+            {% if user.is_authenticated %}
+              id="vote-yes-{{ bill.id }}"
+              action="{% url 'elections:bill-vote' bill.id %}"
+              value="vote-yes"
+            {% else %}
+              data-toggle="tooltip" data-placement="bottom"
+              title="Login to vote" data-trigger="click"
+            {% endif %}
+          {% endif %}
+          >
+          &check; Yes: <span class="num-yes-votes" id="num-yes-votes-{{ bill.id }}">{{ bill.yes_votes.count }}</span>
+        </a>
+        <a href="javascript:;" class="float-right text-danger mt-2 vote{% if user in bill.no_votes.all %} font-weight-bold{% endif %}"
+        {% if bill.active %}
+          {% if user.is_authenticated %}
+            id="vote-no-{{ bill.id }}"
+            action="{% url 'elections:bill-vote' bill.id %}"
+            value="vote-no"
+          {% else %}
+            data-toggle="tooltip" data-placement="bottom"
+            title="Login to vote" data-trigger="click"
+          {% endif %}
         {% endif %}
         >
-        &check; Yes: <span class="num-yes-votes" id="num-yes-votes-{{ bill.id }}">{{ bill.yes_votes.count }}</span>
-      </a>
-      <a href="javascript:;" class="float-right text-danger mt-2 vote{% if user.is_authenticated and user in bill.no_votes.all %} font-weight-bold{% endif %}"
-      {% if user.is_authenticated %}
-        id="vote-no-{{ bill.id }}"
-        action="{% url 'elections:bill-vote' bill.id %}"
-        value="vote-no"
-      {% else %}
-        data-toggle="tooltip" data-placement="bottom"
-        title="Login to vote" data-trigger="click"
-      {% endif %}
-      >
-        X No: <span class="num-no-votes" id="num-no-votes-{{ bill.id }}">{{ bill.no_votes.count }}</span>
-      </a>
+          X No: <span class="num-no-votes" id="num-no-votes-{{ bill.id }}">{{ bill.no_votes.count }}</span>
+        </a>
+      </div>
     </div>
   </div>
 {% endblock %}

@@ -1,6 +1,9 @@
 $(document).ready(function(){
   const csrftoken = Cookies.get('csrftoken')
   $('.vote').click(function(){
+    // Don't let users vote on expired bills
+    if ($(this).parent().hasClass('inactive')){ return; }
+    
     $.ajax($(this).attr('action'), {
       method: 'POST',
       headers: {'X-CSRFToken': csrftoken},

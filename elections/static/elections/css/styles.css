@@ -6,6 +6,21 @@ body {
   min-width: 10px;
 }
 
+/* Prevent styling vote links on expired bills */
+.inactive a.vote {
+  cursor: default;
+  text-decoration: none;
+}
+
+.inactive a.vote.text-success{
+  color: var(--green) !important;
+}
+
+.inactive a.vote.text-danger {
+  color: var(--red) !important;
+}
+
+
 .git-pull-link {
   text-decoration: none !important;
 }

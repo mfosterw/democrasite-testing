@@ -46,34 +46,37 @@ class BillUpdateView(UserPassesTestMixin, generic.edit.UpdateView):
 
 @require_POST
 def vote(request, pk):
-    if request.user.is_authenticated:
-        bill = Bill.objects.get(pk=pk)
-        vote = request.POST.get('vote')
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden()
 
-        if vote:
-            if vote == 'vote-yes':
-                if bill in request.user.yes_votes.all():
-                    bill.yes_votes.remove(request.user)
-                else:
-                    bill.no_votes.remove(request.user)
-                    bill.yes_votes.add(request.user)
-            elif vote == 'vote-no':
-                if bill in request.user.no_votes.all():
-                    bill.no_votes.remove(request.user)
-                else:
-                    bill.yes_votes.remove(request.user)
-                    bill.no_votes.add(request.user)
-            else:
-                return HttpResponseBadRequest()
+    bill = Bill.objects.get(pk=pk)
+    if not bill.active:
+        return HttpResponseForbidden()
 
-            return JsonResponse({
-                'yes-votes': bill.yes_votes.count(),
-                'no-votes': bill.no_votes.count(),
-            })
-
+    vote = request.POST.get('vote')
+    if not vote:
         return HttpResponseBadRequest()
 
-    return HttpResponseForbidden()
+    if vote == 'vote-yes':
+        if bill in request.user.yes_votes.all():
+            bill.yes_votes.remove(request.user)
+        else:
+            bill.no_votes.remove(request.user)
+            bill.yes_votes.add(request.user)
+    elif vote == 'vote-no':
+        if bill in request.user.no_votes.all():
+            bill.no_votes.remove(request.user)
+        else:
+            bill.yes_votes.remove(request.user)
+            bill.no_votes.add(request.user)
+    else:
+        return HttpResponseBadRequest()
+
+    return JsonResponse({
+        'yes-votes': bill.yes_votes.count(),
+        'no-votes': bill.no_votes.count(),
+    })
+
 
 
 def context_repo(request):
