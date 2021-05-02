@@ -71,7 +71,12 @@ def process_pull(action, pr):
 @shared_task
 def submit_bill(bill_id):
     bill = Bill.objects.get(pk=bill_id)
+    gh = Github(settings.ELECTIONS_GITHUB_TOKEN)
+    repo = gh.get_repo(settings.ELECTIONS_REPO)
+    pull = repo.get_pull(bill.pr_num)
+
     if bill.active == False:
+        pull.edit(state='closed')  # Close failed pull request
         logger.info(f'PR {bill.pr_num}: bill {bill.id} rejected as inactive')
         return
 
@@ -81,6 +86,7 @@ def submit_bill(bill_id):
     if total_votes < settings.ELECTIONS_MINIMUM_QUORUM:
         bill.active = False
         bill.save()
+        pull.edit(state='closed')  # Close failed pull request
         logger.info((f'PR {bill.pr_num}: bill {bill.id} rejected with '
             'insufficient votes'))
         return
@@ -92,14 +98,10 @@ def submit_bill(bill_id):
         approved = approval > settings.ELECTIONS_NORMAL_MAJORITY
 
     if approved:
-        msg = f''
         logger.info((f'PR {bill.pr_num}: Pull request passed with '
             f'{approval * 100}% of votes'))
-        gh = Github(settings.ELECTIONS_GITHUB_TOKEN)
-        repo = gh.get_repo(settings.ELECTIONS_REPO)
-        pull = repo.get_pull(bill.pr_num)
-        res = pull.merge(commit_message=msg + ' on Democrasite', sha=bill.sha)
-        logger.info(f'PR {bill.pr_num} merged: {res.merged}')
+        merge = pull.merge(merge_method='squash', sha=bill.sha)
+        logger.info(f'PR {bill.pr_num}: merged ({merge.merged})')
 
         # Automatically update constitution line numbers if necessary
         if not bill.constitutional:
@@ -107,12 +109,13 @@ def submit_bill(bill_id):
             con_update = constitution.update_constitution(diff)
             if con_update:
                 con_sha = repo.get_contents('elections/constitution.json').sha
-                con_res = repo.update_file('elections/constitution.json',
+                repo.update_file('elections/constitution.json',
                     message=f'Update Constitution for PR {bill.pr_num}',
                     content=con_update, sha=con_sha)
                 logger.info(f'PR {bill.pr_num}: constitution updated')
 
     else:
+        pull.edit(state='closed')  # Close failed pull request
         logger.info((f'PR {bill.pr_num}: Pull request failed with {approval}%'
             ' of votes'))
 
