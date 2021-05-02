@@ -61,7 +61,13 @@
       </div>
     {% endif %}
   {% empty %}
-    <p>No bills up for vote right now.</p>
+    {% if request.resolver_match.url_name == 'index' %}
+      <p>No bills up for vote right now.</p>
+    {% elif request.resolver_match.url_name == 'my-bills' %}
+      <p>Looks like you haven't proposed any bills yet.</p>
+    {% elif request.resolver_match.url_name == 'my-bill-votes' %}
+      <p>Looks like you haven't voted on any bills yet.</p>
+    {% endif %}
   {% endfor %}
 {% endblock %}
 
