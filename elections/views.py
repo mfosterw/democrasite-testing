@@ -1,5 +1,5 @@
 from django.views import generic
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.views.decorators.http import require_POST
 from django.conf import settings
@@ -18,14 +18,16 @@ class BillListView(generic.ListView):
     model = Bill
     queryset = Bill.objects.filter(active=True)
 
-class BillProposalsView(generic.ListView):
+class BillProposalsView(LoginRequiredMixin, generic.ListView):
     model = Bill
+    raise_exception = True
 
     def get_queryset(self):
         return self.request.user.bill_set.all()
 
-class BillVotesView(generic.ListView):
+class BillVotesView(LoginRequiredMixin, generic.ListView):
     model = Bill
+    raise_exception = True
 
     def get_queryset(self):
         return (self.request.user.yes_votes.all() |
