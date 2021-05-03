@@ -5,7 +5,7 @@
     <div class="col col-md-10 col-lg-8 about-page">
       <h2><strong>About</strong></h2>
       <p>
-        This website is the epitome of user-generated content, of “web 2.0,” of social media. Everything on this website can be created, removed, or altered by any user, especially the site itself. All that you, the user, have to do in order to change or add something, is to create an account and then go to the GitHub page for this website, fork the project, and submit a pull request. A Bill will automatically be created which you can see on the site. After that, it is up to your fellow users to vote on your proposed changes. If the majority of votes agree with you, the change will be automatically accepted and deployed to the live site. If they don’t, the pull request will be closed and you will have to try again. Anyone, regardless of technical knowledge and experience, can vote on these changes, and anyone who knows how to write Python can propose changes. This is the ultimate democratic technology, the only website where the site itself is user-generated. You, user, are invited to make this experiment into anything you like.
+        This website is the epitome of user-generated content, of “web 2.0,” of social media. Everything on this website can be created, removed, or altered by any user, especially the site itself. All that you, the user, have to do in order to change or add something, is to create an account and then go to the GitHub page for this website, fork the project, and submit a pull request. A bill will automatically be created which you can see on the site. After that, it is up to your fellow users to vote on your proposed changes. If the majority of votes agree with you, the change will be automatically accepted and deployed to the live site. If they don’t, the pull request will be closed and you will have to try again. Anyone, regardless of technical knowledge and experience, can vote on these changes, and anyone who knows how to write Python can propose changes. This is the ultimate democratic technology, the only website where the site itself is user-generated. You, user, are invited to make this experiment into anything you like.
       </p>
       <br>
       <h2><strong>The Constitution</strong></h2>
@@ -22,6 +22,40 @@
       <p>
         This website is, obviously, inspired by the ideas of democratic governance, or government "by the people." In particular, it serves as a direct democracy, where every proposed law or policy change is put to a popular referendum, letting the citizens, or users, make every decision about how the site will be governed. The difference between this website and a real country is that the governance, the day-to-day running of the institutions, is done automatically by the code that is on the server implemented, which obviously cannot subvert the intentions of the users who approve that code, as opposed to the myriad of people required to maintain a nation, with varying degrees of power and each with their own goals and agendas. Despite this major caveat, this website was inspired by real government, and I hope it can go on to inspire governments in exchange. The use of Git version control has been immensely powerful for “open-source,” or community developed, software, by allowing anyone to submit improvements for a project maintainer to review and approve if they help the project. This website replaces the step of approval by a maintainer, or authority figure, with approval by the user base, or general public. Real law codes could undergo a similar shift with tools made possible by the internet. Already several local and state governments have begun experimenting with publishing laws on Github, and some even let the public submit proposals through it, such as fixing some phrasing on government websites. These places are just beginning to understand the potential that these tools create, and I hope that this project can help to demonstrate that potential. Git seems especially powerful for the process of “codification,” or combining all the pieces of legislation passed into a unified code of laws which can be used as a general reference. This is usually undertaken by unelected government officials, who can and have made <a href="https://en.wikipedia.org/wiki/United_States_Code#Legal_status" target="_blank">mistakes</a>. Git allows anyone to propose fixes or additions to such a code, as well as including tools such as blame to let everyone see who changed any part of the code. Regardless of how changes come about, it is clear the impact that the internet will have on systems of government has barely begun to be realized.
       </p>
+      <h2><strong>A Bill</strong></h2>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-sm-11 col-md-9 col-lg-7 col-xl-6">
+      <div class="card text-center mb-4 bg-light">
+        <div class="card-body inactive">
+          <a class="card-link" href="javascript:;">
+            <h5 class="card-title">This is an example of a bill</h5>
+            <p class="text-info">If a bill is an amendment to the constitution, it will say so here.</p>
+          </a>
+          <p class="text-danger">If the time to vote on a bill has passed, it will say it's expired here.</p>
+          <hr>
+          <div class="card-text">
+            The information about bills is taken directly from Github when a pull request is opened. The title and number of the pull request will replace the title text at the top of this card. This area is where the description of the bill goes. If you want to edit the title or description of a bill you proposed, click on the title to see the detaile view, and then click on the pencil next to the description on that page. Only a bill's creator can edit its title and description. Below this on the right, the red and green numbers signify the "diff size" of the bill, or how many lines were <span class="text-success">+added&nbsp;(green)</span> and <span class="text-danger">-removed&nbsp;(red)</span> in the edits this bill represents. Click on the diff to be redirected to the details of the changes that bill implements on Github. Under that is a bar which shows the proportion of votes in favor and against the bill. Underneath that, the "yes" and "no" links are where you click to vote for or against a bill, respectively. You need to log in before you can vote on real bills, and expired bills cannot be voted on. The numbers next to the bills are how many people have cast that vote for a particular bill. If you already voted on a bill, your choice will be in <strong>bold</strong>, and you can click it again to retract your vote. Visit the <a href="{% url 'elections:index' %}">homepage</a> to see some real bills (if any exist right now), log in, and cast some votes!
+          </div>
+          <div class="card-text text-right">
+            <a class="card-link git-pull-link" href="javascript:;">
+              <span class="text-success">+0</span>
+              <span class="text-danger">-0</span>
+            </a>
+          </div>
+          <div class="progress">
+            <div class="progress-bar bg-success" role="progressbar"></div>
+            <div class="progress-bar bg-danger" role="progressbar"></div>
+          </div>
+          <a href="javascript:;" class="float-left text-success mt-2 vote">
+            &check; Yes: <span class="num-yes-votes">0</span>
+          </a>
+          <a href="javascript:;" class="float-right text-danger mt-2 vote">
+            X No: <span class="num-no-votes">0</span>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 {% endblock %}
