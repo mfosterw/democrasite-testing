@@ -31,7 +31,7 @@
             {% endif %}
             <hr>
             <div class="card-text">
-              {{ bill.description }}
+              {{ bill.description|truncatewords:20 }}
             </div>
             <div class="card-text text-right">
               <a class="card-link git-pull-link" href="https://github.com/{{ github_repo }}/pull/{{ bill.pr_num }}/files" target="_blank">
