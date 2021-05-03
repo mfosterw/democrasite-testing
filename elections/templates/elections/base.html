@@ -14,36 +14,9 @@
 
 {% block bootstrap4_content %}
   <header>
-    <nav class="navbar navbar-expand-md navbar-light text-right" id="navbar">
-        <ul class="navbar-nav ml-auto flex-nowrap">
-          {% if user.is_authenticated %}
-            {# lazy way to check if user is logged in with github #}
-            {% for association in backends.associated %}
-              {% if association.provider == 'github' %}
-                <li class="nav-item">
-                  <a href="{% url 'elections:my-bills' %}" class="nav-link">Proposals</a>
-                </li>
-              {% endif %}
-            {% endfor %}
-            <li class="nav-item">
-              <a href="{% url 'elections:my-bill-votes' %}" class="nav-link">Votes cast</a>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'logout' %}?next={{ request.path }}" class="nav-link">Logout</a>
-            </li>
-          {% else %}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Login
-            </a>
-            <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item px-3" href="{% url 'social:begin' 'github' %}?next={{ request.path }}">Github</a>
-              <a class="dropdown-item px-3" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Google</a>
-            </div>
-          </li>
-          {% endif %}
-        </ul>
-    </nav>
+    {% block header %}
+      {% include 'elections/navbar.html' %}
+    {% endblock %}
   </header>
 
   <main class="container-fluid">
@@ -51,17 +24,19 @@
   </main>
 
   <footer class="footer fixed-bottom">
-    <div class="container">
-      <div class="text-center">
-        {% if request.resolver_match.url_name == 'index' %}
-          <a href="{% url 'elections:about' %}">About</a>
-          |
-          <a href="https://github.com/{{ github_repo }}" target="_blank">Github</a>
-        {% else %}
-          <a href="{% url 'elections:index' %}">Home</a>
-        {% endif %}
+    {% block footer %}
+      <div class="container">
+        <div class="text-center">
+          {% if request.resolver_match.url_name == 'index' %}
+            <a href="{% url 'elections:about' %}">About</a>
+            |
+            <a href="https://github.com/{{ github_repo }}" target="_blank">Github</a>
+          {% else %}
+            <a href="{% url 'elections:index' %}">Home</a>
+          {% endif %}
+        </div>
       </div>
-    </div>
+    {% endblock %}
   </footer>
 {% endblock %}
 
