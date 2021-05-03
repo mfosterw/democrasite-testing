@@ -1,5 +1,15 @@
 {% extends 'elections/base.html' %}
 
+{% block title %}
+  {% if request.resolver_match.url_name == 'index' %}
+    {{ block.super }}
+  {% elif request.resolver_match.url_name == 'my-bills' %}
+    My Bills - {{ block.super }}
+  {% elif request.resolver_match.url_name == 'my-bill-votes' %}
+    My Votes - {{ block.super }}
+  {% endif %}
+{% endblock %}
+
 {% block content %}
   {% for bill in bill_list %}
     {% if forloop.counter0|divisibleby:4 %}
