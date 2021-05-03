@@ -17,9 +17,14 @@
     <nav class="navbar navbar-expand-md navbar-light text-right" id="navbar">
         <ul class="navbar-nav ml-auto flex-nowrap">
           {% if user.is_authenticated %}
-            <li class="nav-item">
-              <a href="{% url 'elections:my-bills' %}" class="nav-link">Proposals</a>
-            </li>
+            {# lazy way to check if user is logged in with github #}
+            {% for association in backends.associated %}
+              {% if association.provider == 'github' %}
+                <li class="nav-item">
+                  <a href="{% url 'elections:my-bills' %}" class="nav-link">Proposals</a>
+                </li>
+              {% endif %}
+            {% endfor %}
             <li class="nav-item">
               <a href="{% url 'elections:my-bill-votes' %}" class="nav-link">Votes cast</a>
             </li>
