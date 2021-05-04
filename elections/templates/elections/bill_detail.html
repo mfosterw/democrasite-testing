@@ -3,7 +3,7 @@
 {% block title %}{{ bill.name }} - {{ block.super }}{% endblock %}
 
 {% block content %}
-  <div class="container {% if not bill.active %} inactive{% endif %}">
+  <div class="container">
     <div class="row">
       <div class="col">
         <h2>{{ bill }}</h2>
@@ -34,7 +34,7 @@
     </div>
 
     <div class="row">
-      <div class="col-3">
+      <div class="col-3{% if not bill.active %} inactive{% endif %}">
         <div class="progress">
           <div class="progress-bar bg-success" role="progressbar"></div>
           <div class="progress-bar bg-danger" role="progressbar"></div>
@@ -76,7 +76,7 @@
 
 {% block javascript %}
   <script type="text/javascript" src="{% static 'elections/js/bill.js' %}"></script>
-  {% if user.is_authenticated %}
+  {% if user.is_authenticated and bill.active %}
     <script type="text/javascript" src="{% static 'elections/js/vote.js' %}"></script>
   {% endif %}
 {% endblock %}
