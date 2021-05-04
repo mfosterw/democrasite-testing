@@ -10,8 +10,8 @@
         {% if bill.constitutional %}
           <p class="text-info">Amendment to the Constitution</p>
         {% endif %}
-        {% if not bill.active %}
-          <p class="text-danger">Expired</p>
+        {% if bill.state != bill.OPEN %}
+          <p class="text-danger">{{ bill.get_state_display }}</p>
         {% endif %}
         <p>
           {{ bill.description }}
@@ -34,13 +34,13 @@
     </div>
 
     <div class="row">
-      <div class="col-3{% if not bill.active %} inactive{% endif %}">
+      <div class="col-3{% if bill.state != bill.OPEN %} inactive{% endif %}">
         <div class="progress">
           <div class="progress-bar bg-success" role="progressbar"></div>
           <div class="progress-bar bg-danger" role="progressbar"></div>
         </div>
         <a href="javascript:;" class="float-left text-success mt-2 vote{% if user in bill.yes_votes.all %} font-weight-bold{% endif %}"
-          {% if bill.active %}
+          {% if bill.state == bill.OPEN %}
             {% if user.is_authenticated %}
               id="vote-yes-{{ bill.id }}"
               action="{% url 'elections:bill-vote' bill.id %}"
@@ -54,7 +54,7 @@
           &check; Yes: <span class="num-yes-votes" id="num-yes-votes-{{ bill.id }}">{{ bill.yes_votes.count }}</span>
         </a>
         <a href="javascript:;" class="float-right text-danger mt-2 vote{% if user in bill.no_votes.all %} font-weight-bold{% endif %}"
-        {% if bill.active %}
+        {% if bill.state == bill.OPEN %}
           {% if user.is_authenticated %}
             id="vote-no-{{ bill.id }}"
             action="{% url 'elections:bill-vote' bill.id %}"
@@ -76,7 +76,7 @@
 
 {% block javascript %}
   <script type="text/javascript" src="{% static 'elections/js/bill.js' %}"></script>
-  {% if user.is_authenticated and bill.active %}
+  {% if user.is_authenticated and bill.state == bill.OPEN %}
     <script type="text/javascript" src="{% static 'elections/js/vote.js' %}"></script>
   {% endif %}
 {% endblock %}

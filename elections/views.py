@@ -16,7 +16,7 @@ class AboutView(generic.TemplateView):
 
 class BillListView(generic.ListView):
     model = Bill
-    queryset = Bill.objects.filter(active=True)
+    queryset = Bill.objects.filter(state=Bill.OPEN)
 
 class BillProposalsView(LoginRequiredMixin, generic.ListView):
     model = Bill
@@ -50,7 +50,7 @@ def vote(request, pk):
         return HttpResponseForbidden()
 
     bill = Bill.objects.get(pk=pk)
-    if not bill.active:
+    if bill.state != Bill.OPEN:
         return HttpResponseForbidden()
 
     vote = request.POST.get('vote')

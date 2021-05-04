@@ -12,7 +12,7 @@ body {
   text-decoration: none;
 }
 
-.inactive a.vote.text-success{
+.inactive a.vote.text-success {
   color: var(--green) !important;
 }
 

@@ -38,7 +38,7 @@ def process_pull(action, pr):
             additions=pr['additions'],
             deletions=pr['deletions'],
             sha=pr['head']['sha'],
-            active=True,
+            state=Bill.OPEN, # == pr['state'][0]
             constitutional=bool(constitutional),
         )
         bill.save()
@@ -55,13 +55,13 @@ def process_pull(action, pr):
     if action == 'closed':
         try:
             bill = Bill.objects.filter(pr_num=pr['number'])\
-                .get(active=True)
+                .get(state=Bill.OPEN)
         except Bill.DoesNotExist:
-            logger.info(f'PR {pr["number"]}: No modification (no active bill)')
+            logger.info(f'PR {pr["number"]}: No modification (no open bill)')
             return
-        bill.active = False
+        bill.state = Bill.CLOSED
         bill.save()
-        logger.info(f'PR {pr["number"]}: Bill {bill.id} set to inactive')
+        logger.info(f'PR {pr["number"]}: Bill {bill.id} set to closed')
         return
 
     logger.info(f'PR {pr["number"]}: Action not handled')
@@ -75,16 +75,16 @@ def submit_bill(bill_id):
     repo = gh.get_repo(settings.ELECTIONS_REPO)
     pull = repo.get_pull(bill.pr_num)
 
-    if bill.active == False:
+    if bill.state != Bill.OPEN:
         pull.edit(state='closed')  # Close failed pull request
-        logger.info(f'PR {bill.pr_num}: bill {bill.id} rejected as inactive')
+        logger.info(f'PR {bill.pr_num}: bill {bill.id} was not open')
         return
 
     ayes = bill.yes_votes.count()
     nays = bill.no_votes.count()
     total_votes = ayes + nays
     if total_votes < settings.ELECTIONS_MINIMUM_QUORUM:
-        bill.active = False
+        bill.state = Bill.FAILED
         bill.save()
         pull.edit(state='closed')  # Close failed pull request
         logger.info((f'PR {bill.pr_num}: bill {bill.id} rejected with '
@@ -98,6 +98,8 @@ def submit_bill(bill_id):
         approved = approval > settings.ELECTIONS_NORMAL_MAJORITY
 
     if approved:
+        bill.state = Bill.APPROVED
+        bill.save()
         logger.info((f'PR {bill.pr_num}: Pull request passed with '
             f'{approval * 100}% of votes'))
         merge = pull.merge(merge_method='squash', sha=bill.sha)
@@ -115,9 +117,8 @@ def submit_bill(bill_id):
                 logger.info(f'PR {bill.pr_num}: constitution updated')
 
     else:
+        bill.state = Bill.REJECTED
+        bill.save()
         pull.edit(state='closed')  # Close failed pull request
         logger.info((f'PR {bill.pr_num}: Pull request failed with {approval}%'
             ' of votes'))
-
-    bill.active = False
-    bill.save()

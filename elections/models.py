@@ -10,12 +10,24 @@ class Bill(models.Model):
     description = models.TextField()
     # Github info
     pr_num = models.IntegerField('pull request')
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     additions = models.IntegerField()
     deletions = models.IntegerField()
-    sha = models.CharField(max_length = 40) # Unique sha of PR commit
+    sha = models.CharField(max_length=40) # Unique sha of PR commit
     # Backend info
-    active = models.BooleanField(default=True)
+    OPEN = 'o'
+    APPROVED = 'a'
+    REJECTED = 'r'
+    FAILED = 'f' # Failed to reach quorum
+    CLOSED = 'c' # PR closed on Github
+    STATES = (
+        (OPEN, 'Open'),
+        (APPROVED, 'Approved'),
+        (REJECTED, 'Rejected'),
+        (FAILED, 'Not Enough Votes'),
+        (CLOSED, 'PR Closed'),
+    )
+    state = models.CharField(max_length=1, choices=STATES, default=OPEN)
     constitutional = models.BooleanField(default=False,
         help_text='This is true only for amendments to the constitution')
 

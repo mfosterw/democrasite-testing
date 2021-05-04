@@ -17,7 +17,7 @@
     {% endif %}
       <div class="col-sm-12 col-md-6 col-lg-3">
         <div class="card text-center mb-4{% if bill.constitutional %} bg-light{% endif %}">
-          <div class="card-body{% if not bill.active %} inactive{% endif %}">
+          <div class="card-body{% if bill.state != bill.OPEN %} inactive{% endif %}">
             <a class="card-link" href="{{ bill.get_absolute_url }}">
               <h5 class="card-title">
                   {{ bill }}
@@ -26,8 +26,10 @@
                 <p class="text-info">Amendment to the Constitution</p>
               {% endif %}
             </a>
-            {% if not bill.active %}
-              <p class="text-danger">Expired</p>
+            {% if bill.state != bill.OPEN %}
+              <p class="{% if bill.state == bill.APPROVED %}text-success{% else %}text-danger{% endif %}">
+                {{ bill.get_state_display }}
+              </p>
             {% endif %}
             <hr>
             <div class="card-text">
@@ -44,7 +46,7 @@
               <div class="progress-bar bg-danger" role="progressbar"></div>
             </div>
             <a href="javascript:;" class="float-left text-success mt-2 vote{% if user in bill.yes_votes.all %} font-weight-bold{% endif %}"
-              {% if bill.active %}
+              {% if bill.state == bill.OPEN %}
                 {% if user.is_authenticated %}
                   id="vote-yes-{{ bill.id }}"
                   action="{% url 'elections:bill-vote' bill.id %}"
@@ -58,7 +60,7 @@
               &check; Yes: <span class="num-yes-votes" id="num-yes-votes-{{ bill.id }}">{{ bill.yes_votes.count }}</span>
             </a>
             <a href="javascript:;" class="float-right text-danger mt-2 vote{% if user in bill.no_votes.all %} font-weight-bold{% endif %}"
-            {% if bill.active %}
+            {% if bill.state == bill.OPEN %}
               {% if user.is_authenticated %}
                 id="vote-no-{{ bill.id }}"
                 action="{% url 'elections:bill-vote' bill.id %}"
