@@ -13,7 +13,7 @@
           <a href="{% url 'elections:my-bill-votes' %}" class="nav-link">Votes cast</a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'logout' %}?next={{ request.path }}" class="nav-link">Logout</a>
+          <a href="{% url 'logout' %}" class="nav-link">Logout</a>
         </li>
       {% else %}
       <li class="nav-item dropdown">

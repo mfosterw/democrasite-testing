@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.conf import settings
 
 urlpatterns = [
-    path('logout/', LogoutView.as_view(), name='logout'),
+    path('logout/', LogoutView.as_view(next_page='elections:index'), name='logout'),
     path('auth/', include('social_django.urls', namespace='social')),
     path('', include('elections.urls')),
 ]
